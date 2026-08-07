@@ -116,13 +116,43 @@ pipeline {
             }
         }
     }
-    post{
-        success{
-            archiveArtifacts artifacts: '*.xml', followSymlinks: false
-            build job: "Wanderlust-CD", parameters: [
-                string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
-                string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
-            ]
-        }
+    post {
+    success {
+        archiveArtifacts artifacts: '*.xml', followSymlinks: false
+
+        build job: "Wanderlust-CD", parameters: [
+            string(name: 'FRONTEND_DOCKER_TAG', value: "${params.FRONTEND_DOCKER_TAG}"),
+            string(name: 'BACKEND_DOCKER_TAG', value: "${params.BACKEND_DOCKER_TAG}")
+        ]
+    }
+
+    failure {
+        emailext(
+            attachLog: true,
+            from: 'shamelsk10@gmail.com',
+            to: 'shamelsk10@gmail.com',
+            subject: "Wanderlust CI Pipeline Failed - ${currentBuild.currentResult}",
+            mimeType: 'text/html',
+            body: """
+            <html>
+            <body>
+                <h2 style="color:red;">CI Pipeline Failed</h2>
+
+                <p><b>Project:</b> ${env.JOB_NAME}</p>
+
+                <p><b>Build Number:</b> ${env.BUILD_NUMBER}</p>
+
+                <p><b>Status:</b> ${currentBuild.currentResult}</p>
+
+                <p><b>Build URL:</b>
+                <a href="${env.BUILD_URL}">
+                    ${env.BUILD_URL}
+                </a></p>
+
+                <p>Please check the Jenkins console log to identify the failed stage.</p>
+            </body>
+            </html>
+            """
+        )
     }
 }
