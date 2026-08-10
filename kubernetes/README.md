@@ -39,7 +39,7 @@ kubectl create namespace Wanderlust
 ```bash
 kubectl config set-context --current --namespace Wanderlust
 ```
-![Update context](https://github.com/shamelsk/Wanderlust/blob/main/kubernetes/assets/context%20Wanderlust.png)
+![Update context](https://github.com/shamelsk/Wanderlust/blob/main/kubernetes/assets/context%20wanderlust.png)
 
 #
 6) Enable DNS resolution on kubernetes cluster :
